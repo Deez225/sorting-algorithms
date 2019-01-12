@@ -1,57 +1,48 @@
 #include <iostream>
 #include <vector>
 
-typedef unsigned int uint;
 
-template <typename T>
-void _swap(T &a, T &b){
+void swap(int &a, int &b){
 	 T temp = a;
           a = b;
           b = temp;
 }
 
 
-template <typename T>
-uint _partition(std::vector<T> &arr, int left, int right){
-	 
-	 int j = left - 1;
-     uint  pivot = right;
-     for(int i = left; i < right; i++){
-		 if(arr[i] <= arr[pivot]){
-		 	j = j + 1;
-            _swap(arr[i], arr[j]);
-		 }	
-     }
-	 _swap(arr[j + 1], arr[pivot]);
-     return j + 1;
+int partition(std::vector<int> &arr, int left, int right)
+{
+
+    int j = left--;
+    while(j < right)
+    {
+         if(arr[j] <= arr[right])
+            swap(arr[++left], arr[j]);
+         j++;
+    }
+
+    swap(arr[++left], arr[right]);
+    return left;
 }
 
 
-template <typename T>
-void quick_sort(std::vector<T> &arr, int left, int right){
-	 if(left < right){
-		int q = _partition(arr, left, right);// From begin to end.
-        quick_sort(arr, left, q - 1);  // From begin to pivot.
-        quick_sort(arr, q + 1, right); // From pivot to end.
-     }
+void quicksort(std::vector<int> &arr, int left, int right)
+{
+    if(left < right)
+    {
+        int pivot_index = partition(arr, left, right);
+        quicksort(arr, left, pivot_index - 1);
+        quicksort(arr, pivot_index + 1, right);
+    }
 }
 
-
-template <typename T>
-void ccontent_of(std::vector<T> arr){
-	 for(auto x : arr)
-         std::cout << x << " ";
-     std::cout << "\n";
-}
 
 int main()
 {
-	std::vector<int> arr{0,4,6,3,2,10,9};
-	std::cout << "Begin\n";
-    ccontent_of(arr);
-    std::cout << "Quicksort\n";
-    quick_sort(arr,0,6); 
-    ccontent_of(arr);
-	std::cout << "End!\n";
-	return 0;
+    std::vector<int> v = {4, 16, 3, 9, 5, 25, 1};
+
+    quicksort(v, 0, 7);
+
+    for(auto x : v)
+        std::cout << x << ' ';
+    std::cout << '\n';
 }
